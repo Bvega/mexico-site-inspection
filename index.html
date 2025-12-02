@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LuxeInspect v1</title>
+    <title>LuxeInspect Social</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap');
 
-        body { font-family: 'Lato', sans-serif; background-color: #121212; color: #e0e0e0; padding-bottom: 80px; }
+        body { font-family: 'Lato', sans-serif; background-color: #121212; color: #e0e0e0; padding-bottom: 90px; }
         h1, h2, h3, .serif { font-family: 'Playfair Display', serif; }
         .text-gold { color: #D4AF37; }
         .bg-gold { background-color: #D4AF37; }
@@ -19,6 +19,9 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         input[type="text"], textarea { background-color: #1E1E1E; border: 1px solid #333; color: white; transition: border-color 0.3s; }
         input[type="text"]:focus, textarea:focus { outline: none; border-color: #D4AF37; }
+        
+        /* Social Button Styles */
+        .btn-social { @apply flex items-center justify-center gap-2 p-3 rounded font-bold text-white transition shadow-lg; }
     </style>
 </head>
 <body>
@@ -26,7 +29,7 @@
     <div class="fixed top-0 left-0 right-0 bg-[#0a0a0a] z-50 border-b border-gray-800 px-4 py-3 flex justify-between items-center shadow-lg">
         <div class="flex items-center gap-2">
             <i class="fa-solid fa-gem text-gold text-xl"></i>
-            <span class="serif text-xl font-bold tracking-wide text-white">Luxe<span class="text-gold">Lite</span></span>
+            <span class="serif text-xl font-bold tracking-wide text-white">Luxe<span class="text-gold">Social</span></span>
         </div>
         <button onclick="resetData()" class="text-xs text-gray-500 hover:text-red-500">Reset</button>
     </div>
@@ -37,30 +40,44 @@
         <div id="dashboard" class="page active">
             <div class="bg-[#1E1E1E] p-4 rounded-lg mb-6 shadow-md border-l-4 border-gold">
                 <label class="block text-xs text-gold uppercase tracking-wider mb-2">Property Name</label>
-                <input type="text" id="propertyName" placeholder="e.g. The Ritz Paris" class="w-full p-2 rounded text-lg bg-[#2A2A2A] focus:ring-1 focus:ring-gold" oninput="saveGlobalData()">
+                <input type="text" id="propertyName" placeholder="e.g. Sans Souci" class="w-full p-2 rounded text-lg bg-[#2A2A2A] focus:ring-1 focus:ring-gold" oninput="saveGlobalData()">
             </div>
-            <div class="grid grid-cols-2 gap-4 mb-20">
-                <button onclick="openCategory('arrival')" class="bg-[#1E1E1E] p-4 rounded-xl shadow hover:bg-[#252525] transition text-left group">
-                    <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center mb-3 group-hover:bg-gray-700"><i class="fa-solid fa-plane-arrival text-gold"></i></div>
+            
+            <!-- Standard Categories Grid -->
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <button onclick="openCategory('arrival')" class="bg-[#1E1E1E] p-4 rounded-xl shadow hover:bg-[#252525] transition text-left">
+                    <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center mb-3"><i class="fa-solid fa-plane-arrival text-gold"></i></div>
                     <h3 class="font-bold text-white">Arrival</h3>
                     <p class="text-xs text-gray-500 mt-1" id="count-arrival">0 items</p>
                 </button>
-                <button onclick="openCategory('room')" class="bg-[#1E1E1E] p-4 rounded-xl shadow hover:bg-[#252525] transition text-left group">
-                    <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center mb-3 group-hover:bg-gray-700"><i class="fa-solid fa-bed text-gold"></i></div>
+                <button onclick="openCategory('room')" class="bg-[#1E1E1E] p-4 rounded-xl shadow hover:bg-[#252525] transition text-left">
+                    <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center mb-3"><i class="fa-solid fa-bed text-gold"></i></div>
                     <h3 class="font-bold text-white">The Room</h3>
                     <p class="text-xs text-gray-500 mt-1" id="count-room">0 items</p>
                 </button>
-                <button onclick="openCategory('dining')" class="bg-[#1E1E1E] p-4 rounded-xl shadow hover:bg-[#252525] transition text-left group">
-                    <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center mb-3 group-hover:bg-gray-700"><i class="fa-solid fa-utensils text-gold"></i></div>
+                <button onclick="openCategory('dining')" class="bg-[#1E1E1E] p-4 rounded-xl shadow hover:bg-[#252525] transition text-left">
+                    <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center mb-3"><i class="fa-solid fa-utensils text-gold"></i></div>
                     <h3 class="font-bold text-white">Dining</h3>
                     <p class="text-xs text-gray-500 mt-1" id="count-dining">0 items</p>
                 </button>
-                <button onclick="openCategory('amenities')" class="bg-[#1E1E1E] p-4 rounded-xl shadow hover:bg-[#252525] transition text-left group">
-                    <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center mb-3 group-hover:bg-gray-700"><i class="fa-solid fa-water text-gold"></i></div>
+                <button onclick="openCategory('amenities')" class="bg-[#1E1E1E] p-4 rounded-xl shadow hover:bg-[#252525] transition text-left">
+                    <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center mb-3"><i class="fa-solid fa-water text-gold"></i></div>
                     <h3 class="font-bold text-white">Amenities</h3>
                     <p class="text-xs text-gray-500 mt-1" id="count-amenities">0 items</p>
                 </button>
             </div>
+
+            <!-- NEW: Summary Category NOW AT BOTTOM -->
+            <button onclick="openCategory('summary')" class="w-full bg-gradient-to-r from-gray-800 to-gray-900 p-4 rounded-xl shadow border border-gold mb-24 text-left flex items-center justify-between group">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center"><i class="fa-solid fa-pen-nib text-gold"></i></div>
+                    <div>
+                        <h3 class="font-bold text-white text-lg">Executive Summary</h3>
+                        <p class="text-xs text-gray-400">General thoughts & Social Vibe</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right text-gray-500"></i>
+            </button>
         </div>
 
         <!-- CATEGORY -->
@@ -72,40 +89,72 @@
             <div id="checklistItems" class="space-y-6 pb-20"></div>
         </div>
 
-        <!-- REPORT -->
+        <!-- REPORT & SOCIAL -->
         <div id="reportView" class="page">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl text-white serif">Final Report</h2>
-                <button onclick="printReport()" class="bg-gold text-black px-4 py-1 rounded text-sm font-bold">Print PDF</button>
+                <h2 class="text-2xl text-white serif">Report & Social</h2>
             </div>
-            <div id="reportContent" class="bg-white text-black p-6 rounded shadow-lg min-h-[60vh]"></div>
+            
+            <!-- Social Media Generators -->
+            <div class="bg-[#1E1E1E] p-4 rounded-lg mb-6 border border-gray-700">
+                <h3 class="text-gold font-bold mb-3 uppercase text-sm tracking-wider">Social Media Studio</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="copySocial('linkedin')" class="btn-social bg-[#0077b5] hover:bg-[#005e93]">
+                        <i class="fa-brands fa-linkedin"></i> LinkedIn
+                    </button>
+                    <button onclick="copySocial('instagram')" class="btn-social bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90">
+                        <i class="fa-brands fa-instagram"></i> Instagram
+                    </button>
+                    <button onclick="copySocial('facebook')" class="btn-social bg-[#1877F2] hover:bg-[#0d65d9] col-span-2">
+                        <i class="fa-brands fa-facebook"></i> Facebook
+                    </button>
+                </div>
+                <p id="copyFeedback" class="text-green-500 text-xs text-center mt-2 h-4 transition-opacity opacity-0">Copied to clipboard!</p>
+            </div>
+
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-white font-bold">Full Report</h3>
+                <button onclick="printReport()" class="text-xs bg-gray-700 px-3 py-1 rounded">Print PDF</button>
+            </div>
+            <div id="reportContent" class="bg-white text-black p-6 rounded shadow-lg min-h-[50vh]"></div>
         </div>
     </div>
 
     <!-- NAV -->
     <div class="fixed bottom-0 left-0 right-0 bg-[#0a0a0a] border-t border-gray-800 py-3 px-6 flex justify-around items-center z-50">
         <button onclick="showPage('dashboard')" class="flex flex-col items-center gap-1 text-gold"><i class="fa-solid fa-house text-xl"></i><span class="text-[10px]">Home</span></button>
-        <button onclick="showPage('reportView'); generateReport()" class="flex flex-col items-center gap-1 text-gray-400 hover:text-white transition"><i class="fa-solid fa-file-contract text-xl"></i><span class="text-[10px]">Report</span></button>
+        <button onclick="showPage('reportView'); generateReport()" class="flex flex-col items-center gap-1 text-gray-400 hover:text-white transition"><i class="fa-solid fa-share-nodes text-xl"></i><span class="text-[10px]">Social/Report</span></button>
     </div>
 
     <script>
+        // CONFIGURATION
         const categories = {
+            summary: { 
+                title: "Executive Summary", 
+                items: [
+                    "General Vibe & Atmosphere", 
+                    "Who is this hotel for? (Target)", 
+                    "The 'Wow' Factor (Best Feature)", 
+                    "One thing to improve"
+                ] 
+            },
             arrival: { title: "Arrival", items: ["Transfer Condition", "Staff Greeting", "Lobby Atmosphere", "Check-in Speed"] },
             room: { title: "Room", items: ["First Impression", "Cleanliness", "Bed Comfort", "Bathroom Amenities", "Noise Levels", "Wi-Fi"] },
             dining: { title: "Dining", items: ["Breakfast Quality", "Service Speed", "Food Presentation", "Bar Service"] },
             amenities: { title: "Amenities", items: ["Pool Service", "Gym Equipment", "Spa Ambiance", "Grounds Maintenance"] }
         };
+
         let appData = { propertyName: "", ratings: {}, notes: {}, photos: {} };
 
         window.onload = function() {
-            const saved = localStorage.getItem('luxeInspectV1');
+            const saved = localStorage.getItem('luxeInspectSocial');
             if (saved) { appData = JSON.parse(saved); document.getElementById('propertyName').value = appData.propertyName || ""; }
             updateCounts();
         };
 
         function saveGlobalData() {
             appData.propertyName = document.getElementById('propertyName').value;
-            localStorage.setItem('luxeInspectV1', JSON.stringify(appData));
+            localStorage.setItem('luxeInspectSocial', JSON.stringify(appData));
         }
 
         function showPage(id) {
@@ -122,13 +171,18 @@
                 const id = `${key}-${idx}`;
                 const rating = appData.ratings[id] || 0;
                 const photo = appData.photos[id];
+                
+                // Special layout for Summary (No stars, bigger text)
+                const isSummary = key === 'summary';
+                const starsHTML = isSummary ? '' : `<div class="text-gold">${[1,2,3,4,5].map(s => `<i class="fa-${rating >= s ? 'solid' : 'regular'} fa-star cursor-pointer px-0.5" onclick="setRating('${id}', ${s})"></i>`).join('')}</div>`;
+                
                 container.innerHTML += `
                     <div class="bg-[#1E1E1E] p-4 rounded-lg shadow border border-gray-800">
                         <div class="flex justify-between mb-2">
-                            <h4 class="text-white font-medium">${item}</h4>
-                            <div class="text-gold">${[1,2,3,4,5].map(s => `<i class="fa-${rating >= s ? 'solid' : 'regular'} fa-star cursor-pointer px-0.5" onclick="setRating('${id}', ${s})"></i>`).join('')}</div>
+                            <h4 class="text-white font-medium ${isSummary ? 'text-gold' : ''}">${item}</h4>
+                            ${starsHTML}
                         </div>
-                        <textarea oninput="saveNote('${id}', this.value)" class="w-full h-16 text-sm p-3 rounded bg-[#2A2A2A] text-gray-300 resize-none mb-3" placeholder="Notes...">${appData.notes[id] || ''}</textarea>
+                        <textarea oninput="saveNote('${id}', this.value)" class="w-full h-24 text-sm p-3 rounded bg-[#2A2A2A] text-gray-300 resize-none mb-3 focus:bg-[#333]" placeholder="${isSummary ? 'Write your thoughts here...' : 'Notes...'}">${appData.notes[id] || ''}</textarea>
                         <div class="flex items-center gap-3">
                             <label class="flex items-center gap-2 px-3 py-2 bg-gray-800 rounded-full cursor-pointer hover:bg-gray-700">
                                 <i class="fa-solid fa-camera text-gold"></i><span class="text-xs text-gray-300">Photo</span>
@@ -141,7 +195,7 @@
             showPage('categoryView');
         }
 
-        function setRating(id, r) { appData.ratings[id] = r; saveGlobalData(); openCategory(id.split('-')[0]); } // Re-render simple
+        function setRating(id, r) { appData.ratings[id] = r; saveGlobalData(); openCategory(id.split('-')[0]); }
         function saveNote(id, t) { appData.notes[id] = t; saveGlobalData(); }
         
         function handlePhoto(id, input) {
@@ -152,13 +206,44 @@
             }
         }
         function removePhoto(id) { delete appData.photos[id]; saveGlobalData(); openCategory(id.split('-')[0]); }
-        function updateCounts() { Object.keys(categories).forEach(k => document.getElementById(`count-${k}`).innerText = `${categories[k].items.length} Points`); }
-        function resetData() { if(confirm("Reset data?")) { localStorage.removeItem('luxeInspectV1'); location.reload(); } }
+        function updateCounts() { Object.keys(categories).forEach(k => { if(document.getElementById(`count-${k}`)) document.getElementById(`count-${k}`).innerText = `${categories[k].items.length} Points`; }); }
+        function resetData() { if(confirm("Reset data?")) { localStorage.removeItem('luxeInspectSocial'); location.reload(); } }
+
+        // --- SOCIAL MEDIA LOGIC ---
+        function copySocial(platform) {
+            const name = appData.propertyName || "this beautiful property";
+            
+            // Helper to get text from Summary category
+            const getSum = (idx) => appData.notes[`summary-${idx}`] || "";
+            const vibe = getSum(0);
+            const target = getSum(1);
+            const wow = getSum(2);
+
+            let text = "";
+
+            if (platform === 'linkedin') {
+                text = `🏗️ Site Inspection Report: ${name}\n\nI am currently onsite conducting a detailed inspection of ${name}. Here is my initial executive summary for my network:\n\n🔹 Atmosphere: ${vibe || "Checking the vibe..."}\n🔹 Best For: ${target || "Luxury travelers"}\n🔹 The 'Wow' Factor: ${wow || "Stay tuned to find out!"}\n\nI am rigorously checking every detail from the linen quality to the service standards. If you have clients interested in this destination, DM me for my full report.\n\n#SiteInspection #LuxuryTravel #TravelAgentLife #Hospitality #${name.replace(/\s/g, '')}`;
+            } else if (platform === 'instagram') {
+                text = `Checking in from ${name}! 🌴✨\n\nFirst impressions: ${vibe || "Absolutely stunning."} 😍\n\nWho needs to stay here? Definitely perfect for ${target || "couples and luxury seekers"}.\n\nThe absolute highlight so far is ${wow || "the incredible views"}.\n\nFull review coming soon! DM me to book your stay with VIP perks.\n\n#${name.replace(/\s/g, '')} #LuxuryTravel #TravelGram #SiteInspection #TravelAdvisor`;
+            } else if (platform === 'facebook') {
+                 text = `I'm currently at ${name} doing a site inspection for my clients!\n\nJust wanted to share a few quick thoughts:\n\nAtmosphere: ${vibe}\nWho I recommend this for: ${target}\nMy favorite part so far: ${wow}\n\nI'm checking all the details so you don't have to. Message me if you're thinking of a trip here!`;
+            }
+
+            navigator.clipboard.writeText(text).then(() => {
+                const fb = document.getElementById('copyFeedback');
+                fb.classList.remove('opacity-0');
+                setTimeout(() => fb.classList.add('opacity-0'), 2000);
+            });
+        }
 
         function generateReport() {
             const date = new Date().toLocaleDateString();
             let html = `<div class="border-b pb-4 mb-4"><h1 class="text-2xl font-bold text-center">${appData.propertyName || "Property Report"}</h1><p class="text-center text-xs text-gray-500">${date}</p></div>`;
-            Object.keys(categories).forEach(k => {
+            
+            // Force Summary to top of report
+            const cats = ['summary', ...Object.keys(categories).filter(c => c !== 'summary')];
+
+            cats.forEach(k => {
                 let section = `<div class="mb-6"><h3 class="font-bold border-b mb-2 uppercase text-xs text-gray-500">${categories[k].title}</h3>`;
                 let hasItems = false;
                 categories[k].items.forEach((item, idx) => {
@@ -167,7 +252,7 @@
                         hasItems = true;
                         section += `<div class="flex gap-4 mb-4 bg-gray-50 p-2 rounded">
                             <div class="w-16 h-16 bg-gray-200 flex-shrink-0 rounded overflow-hidden">${appData.photos[id] ? `<img src="${appData.photos[id]}" class="w-full h-full object-cover">` : ''}</div>
-                            <div><div class="flex items-center gap-2"><h4 class="font-bold text-sm">${item}</h4><span class="text-gold text-xs">${'★'.repeat(appData.ratings[id] || 0)}</span></div><p class="text-sm italic text-gray-600">${appData.notes[id] || ''}</p></div>
+                            <div><div class="flex items-center gap-2"><h4 class="font-bold text-sm">${item}</h4><span class="text-gold text-xs">${categories[k] === categories.summary ? '' : '★'.repeat(appData.ratings[id] || 0)}</span></div><p class="text-sm italic text-gray-600">${appData.notes[id] || ''}</p></div>
                         </div>`;
                     }
                 });
