@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LuxeInspect v1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap');
+
+        body { font-family: 'Lato', sans-serif; background-color: #121212; color: #e0e0e0; padding-bottom: 80px; }
+        h1, h2, h3, .serif { font-family: 'Playfair Display', serif; }
+        .text-gold { color: #D4AF37; }
+        .bg-gold { background-color: #D4AF37; }
+        .border-gold { border-color: #D4AF37; }
+        .page { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        input[type="text"], textarea { background-color: #1E1E1E; border: 1px solid #333; color: white; transition: border-color 0.3s; }
+        input[type="text"]:focus, textarea:focus { outline: none; border-color: #D4AF37; }
+    </style>
+</head>
+<body>
+    <!-- TOP BAR -->
+    <div class="fixed top-0 left-0 right-0 bg-[#0a0a0a] z-50 border-b border-gray-800 px-4 py-3 flex justify-between items-center shadow-lg">
+        <div class="flex items-center gap-2">
+            <i class="fa-solid fa-gem text-gold text-xl"></i>
+            <span class="serif text-xl font-bold tracking-wide text-white">Luxe<span class="text-gold">Lite</span></span>
+        </div>
+        <button onclick="resetData()" class="text-xs text-gray-500 hover:text-red-500">Reset</button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="pt-20 px-4 max-w-md mx-auto">
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="page active">
+            <div class="bg-[#1E1E1E] p-4 rounded-lg mb-6 shadow-md border-l-4 border-gold">
+                <label class="block text-xs text-gold uppercase tracking-wider mb-2">Property Name</label>
+                <input type="text" id="propertyName" placeholder="e.g. The Ritz Paris" class="w-full p-2 rounded text-lg bg-[#2A2A2A] focus:ring-1 focus:ring-gold" oninput="saveGlobalData()">
+            </div>
+            <div class="grid grid-cols-2 gap-4 mb-20">
+                <button onclick="openCategory('arrival')" class="bg-[#1E1E1E] p-4 rounded-xl shadow hover:bg-[#252525] transition text-left group">
+                    <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center mb-3 group-hover:bg-gray-700"><i class="fa-solid fa-plane-arrival text-gold"></i></div>
+                    <h3 class="font-bold text-white">Arrival</h3>
+                    <p class="text-xs text-gray-500 mt-1" id="count-arrival">0 items</p>
+                </button>
+                <button onclick="openCategory('room')" class="bg-[#1E1E1E] p-4 rounded-xl shadow hover:bg-[#252525] transition text-left group">
+                    <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center mb-3 group-hover:bg-gray-700"><i class="fa-solid fa-bed text-gold"></i></div>
+                    <h3 class="font-bold text-white">The Room</h3>
+                    <p class="text-xs text-gray-500 mt-1" id="count-room">0 items</p>
+                </button>
+                <button onclick="openCategory('dining')" class="bg-[#1E1E1E] p-4 rounded-xl shadow hover:bg-[#252525] transition text-left group">
+                    <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center mb-3 group-hover:bg-gray-700"><i class="fa-solid fa-utensils text-gold"></i></div>
+                    <h3 class="font-bold text-white">Dining</h3>
+                    <p class="text-xs text-gray-500 mt-1" id="count-dining">0 items</p>
+                </button>
+                <button onclick="openCategory('amenities')" class="bg-[#1E1E1E] p-4 rounded-xl shadow hover:bg-[#252525] transition text-left group">
+                    <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center mb-3 group-hover:bg-gray-700"><i class="fa-solid fa-water text-gold"></i></div>
+                    <h3 class="font-bold text-white">Amenities</h3>
+                    <p class="text-xs text-gray-500 mt-1" id="count-amenities">0 items</p>
+                </button>
+            </div>
+        </div>
+
+        <!-- CATEGORY -->
+        <div id="categoryView" class="page">
+            <div class="flex items-center mb-6">
+                <button onclick="showPage('dashboard')" class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center mr-3"><i class="fa-solid fa-arrow-left text-white"></i></button>
+                <h2 id="catTitle" class="text-2xl text-white">Category</h2>
+            </div>
+            <div id="checklistItems" class="space-y-6 pb-20"></div>
+        </div>
+
+        <!-- REPORT -->
+        <div id="reportView" class="page">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl text-white serif">Final Report</h2>
+                <button onclick="printReport()" class="bg-gold text-black px-4 py-1 rounded text-sm font-bold">Print PDF</button>
+            </div>
+            <div id="reportContent" class="bg-white text-black p-6 rounded shadow-lg min-h-[60vh]"></div>
+        </div>
+    </div>
+
+    <!-- NAV -->
+    <div class="fixed bottom-0 left-0 right-0 bg-[#0a0a0a] border-t border-gray-800 py-3 px-6 flex justify-around items-center z-50">
+        <button onclick="showPage('dashboard')" class="flex flex-col items-center gap-1 text-gold"><i class="fa-solid fa-house text-xl"></i><span class="text-[10px]">Home</span></button>
+        <button onclick="showPage('reportView'); generateReport()" class="flex flex-col items-center gap-1 text-gray-400 hover:text-white transition"><i class="fa-solid fa-file-contract text-xl"></i><span class="text-[10px]">Report</span></button>
+    </div>
+
+    <script>
+        const categories = {
+            arrival: { title: "Arrival", items: ["Transfer Condition", "Staff Greeting", "Lobby Atmosphere", "Check-in Speed"] },
+            room: { title: "Room", items: ["First Impression", "Cleanliness", "Bed Comfort", "Bathroom Amenities", "Noise Levels", "Wi-Fi"] },
+            dining: { title: "Dining", items: ["Breakfast Quality", "Service Speed", "Food Presentation", "Bar Service"] },
+            amenities: { title: "Amenities", items: ["Pool Service", "Gym Equipment", "Spa Ambiance", "Grounds Maintenance"] }
+        };
+        let appData = { propertyName: "", ratings: {}, notes: {}, photos: {} };
+
+        window.onload = function() {
+            const saved = localStorage.getItem('luxeInspectV1');
+            if (saved) { appData = JSON.parse(saved); document.getElementById('propertyName').value = appData.propertyName || ""; }
+            updateCounts();
+        };
+
+        function saveGlobalData() {
+            appData.propertyName = document.getElementById('propertyName').value;
+            localStorage.setItem('luxeInspectV1', JSON.stringify(appData));
+        }
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        function openCategory(key) {
+            document.getElementById('catTitle').innerText = categories[key].title;
+            const container = document.getElementById('checklistItems');
+            container.innerHTML = '';
+            categories[key].items.forEach((item, idx) => {
+                const id = `${key}-${idx}`;
+                const rating = appData.ratings[id] || 0;
+                const photo = appData.photos[id];
+                container.innerHTML += `
+                    <div class="bg-[#1E1E1E] p-4 rounded-lg shadow border border-gray-800">
+                        <div class="flex justify-between mb-2">
+                            <h4 class="text-white font-medium">${item}</h4>
+                            <div class="text-gold">${[1,2,3,4,5].map(s => `<i class="fa-${rating >= s ? 'solid' : 'regular'} fa-star cursor-pointer px-0.5" onclick="setRating('${id}', ${s})"></i>`).join('')}</div>
+                        </div>
+                        <textarea oninput="saveNote('${id}', this.value)" class="w-full h-16 text-sm p-3 rounded bg-[#2A2A2A] text-gray-300 resize-none mb-3" placeholder="Notes...">${appData.notes[id] || ''}</textarea>
+                        <div class="flex items-center gap-3">
+                            <label class="flex items-center gap-2 px-3 py-2 bg-gray-800 rounded-full cursor-pointer hover:bg-gray-700">
+                                <i class="fa-solid fa-camera text-gold"></i><span class="text-xs text-gray-300">Photo</span>
+                                <input type="file" accept="image/*" class="hidden" onchange="handlePhoto('${id}', this)">
+                            </label>
+                            ${photo ? `<div class="relative"><img src="${photo}" class="w-10 h-10 object-cover rounded border border-gold"><button onclick="removePhoto('${id}')" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-4 h-4 text-[8px]">X</button></div>` : ''}
+                        </div>
+                    </div>`;
+            });
+            showPage('categoryView');
+        }
+
+        function setRating(id, r) { appData.ratings[id] = r; saveGlobalData(); openCategory(id.split('-')[0]); } // Re-render simple
+        function saveNote(id, t) { appData.notes[id] = t; saveGlobalData(); }
+        
+        function handlePhoto(id, input) {
+            if (input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => { appData.photos[id] = e.target.result; saveGlobalData(); openCategory(id.split('-')[0]); };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        function removePhoto(id) { delete appData.photos[id]; saveGlobalData(); openCategory(id.split('-')[0]); }
+        function updateCounts() { Object.keys(categories).forEach(k => document.getElementById(`count-${k}`).innerText = `${categories[k].items.length} Points`); }
+        function resetData() { if(confirm("Reset data?")) { localStorage.removeItem('luxeInspectV1'); location.reload(); } }
+
+        function generateReport() {
+            const date = new Date().toLocaleDateString();
+            let html = `<div class="border-b pb-4 mb-4"><h1 class="text-2xl font-bold text-center">${appData.propertyName || "Property Report"}</h1><p class="text-center text-xs text-gray-500">${date}</p></div>`;
+            Object.keys(categories).forEach(k => {
+                let section = `<div class="mb-6"><h3 class="font-bold border-b mb-2 uppercase text-xs text-gray-500">${categories[k].title}</h3>`;
+                let hasItems = false;
+                categories[k].items.forEach((item, idx) => {
+                    const id = `${k}-${idx}`;
+                    if(appData.ratings[id] || appData.notes[id] || appData.photos[id]) {
+                        hasItems = true;
+                        section += `<div class="flex gap-4 mb-4 bg-gray-50 p-2 rounded">
+                            <div class="w-16 h-16 bg-gray-200 flex-shrink-0 rounded overflow-hidden">${appData.photos[id] ? `<img src="${appData.photos[id]}" class="w-full h-full object-cover">` : ''}</div>
+                            <div><div class="flex items-center gap-2"><h4 class="font-bold text-sm">${item}</h4><span class="text-gold text-xs">${'★'.repeat(appData.ratings[id] || 0)}</span></div><p class="text-sm italic text-gray-600">${appData.notes[id] || ''}</p></div>
+                        </div>`;
+                    }
+                });
+                if(hasItems) html += section + '</div>';
+            });
+            document.getElementById('reportContent').innerHTML = html || "<p class='text-center text-gray-400'>No data yet.</p>";
+        }
+
+        function printReport() {
+            const win = window.open('', '', 'height=700,width=900');
+            win.document.write(`<html><head><script src="https://cdn.tailwindcss.com"><\/script></head><body class="p-10">${document.getElementById('reportContent').innerHTML}</body></html>`);
+            win.print();
+        }
+    </script>
+</body>
+</html>
